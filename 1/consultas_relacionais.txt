@@ -1,0 +1,48 @@
+SELECT nome, count(id_professor) AS QTD_PROF FROM (
+SELECT DISTINCT d.id_disciplina, d.nome, aloc.id_professor FROM fat_alocacao aloc, dim_disciplina d WHERE aloc.id_disciplina = d.id_disciplina
+) GROUP BY id_disciplina, nome ORDER BY QTD_PROF DESC, nome;
+
+SELECT nome FROM dim_professor p1 
+WHERE p1.nome != ALL(SELECT DISTINCT p2.nome FROM fat_alocacao aloc, dim_professor p2 WHERE aloc.id_curso = 2 AND aloc.id_professor = p2.id_professor) 
+ORDER BY p1.nome;
+
+SELECT * FROM 
+ (SELECT p.nome, AVG(carga) as MEDIA_CH 
+  FROM dim_disciplina d, fat_alocacao a, dim_professor p 
+  WHERE a.id_disciplina = d.id_disciplina AND p.id_professor = a.id_professor 
+  GROUP BY p.nome 
+  ORDER BY MEDIA_CH DESC) 
+WHERE ROWNUM <= 5;
+
+SELECT nome
+FROM dim_professor p, (SELECT id_professor 
+FROM fat_alocacao aloc 
+WHERE aloc.id_curso = 1
+INTERSECT
+SELECT id_professor
+FROM fat_alocacao aloc
+WHERE aloc.id_curso = 2) d
+WHERE p.id_professor = d.id_professor
+ORDER BY nome;
+
+SELECT * FROM (SELECT s.codigo, COUNT(1) as COUNT_SALA 
+FROM dim_sala s, fat_alocacao aloc 
+WHERE aloc.id_sala = s.id_sala 
+GROUP BY s.codigo 
+ORDER BY COUNT_SALA DESC)
+WHERE ROWNUM <= 5;
+
+SELECT * FROM (SELECT d.nome, COUNT(1) as QTD_TURMAS 
+FROM dim_disciplina d, fat_alocacao aloc 
+WHERE aloc.id_disciplina = d.id_disciplina
+GROUP BY d.nome 
+ORDER BY QTD_TURMAS DESC, d.nome)
+WHERE ROWNUM <= 5;
+
+SELECT * FROM (WITH PROFESSORES_MULT_DISC AS (SELECT DISTINCT id_professor, id_disciplina FROM fat_alocacao aloc WHERE aloc.id_disciplina != ANY(SELECT id_disciplina FROM fat_alocacao aloc_int WHERE aloc.id_professor = aloc_int.id_professor) order by id_professor)
+SELECT p.nome, COUNT(1) AS DISC_PROF
+FROM PROFESSORES_MULT_DISC, dim_professor p
+WHERE p.id_professor = PROFESSORES_MULT_DISC.id_professor
+GROUP BY p.nome
+ORDER BY DISC_PROF DESC, p.nome)
+WHERE ROWNUM <= 5;
