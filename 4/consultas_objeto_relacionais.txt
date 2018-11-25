@@ -1,0 +1,5 @@
+SELECT nome, count(id_professor) AS QTD_PROF FROM (
+    SELECT DISTINCT d.id_disciplina, d.nome, aloc.id_professor 
+    FROM fat_obj_tab_alocacao aloc JOIN dim_obj_tab_disciplina d 
+    ON aloc.id_disciplina = REF(d)
+) GROUP BY id_disciplina, nome ORDER BY QTD_PROF DESC, nome;
