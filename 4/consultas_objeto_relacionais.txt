@@ -20,3 +20,14 @@ SELECT * FROM
   GROUP BY p.nome 
   ORDER BY MEDIA_CH DESC) 
 WHERE ROWNUM <= 5;
+
+SELECT nome
+FROM dim_obj_tab_professor p, (SELECT id_professor 
+FROM fat_obj_tab_alocacao aloc 
+WHERE aloc.id_curso.id_curso = 1
+INTERSECT
+SELECT id_professor
+FROM fat_obj_tab_alocacao aloc
+WHERE aloc.id_curso.id_curso = 2) d
+WHERE ref(p) = d.id_professor
+ORDER BY nome;
