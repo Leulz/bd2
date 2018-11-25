@@ -31,3 +31,25 @@ FROM fat_obj_tab_alocacao aloc
 WHERE aloc.id_curso.id_curso = 2) d
 WHERE ref(p) = d.id_professor
 ORDER BY nome;
+
+SELECT * FROM (SELECT s.codigo, COUNT(1) as COUNT_SALA 
+FROM dim_obj_tab_sala s, fat_obj_tab_alocacao aloc 
+WHERE aloc.id_sala = ref(s)
+GROUP BY s.codigo 
+ORDER BY COUNT_SALA DESC)
+WHERE ROWNUM <= 5;
+
+SELECT * FROM (SELECT d.nome, COUNT(1) as QTD_TURMAS 
+FROM dim_obj_tab_disciplina d, fat_obj_tab_alocacao aloc 
+WHERE aloc.id_disciplina = ref(d)
+GROUP BY d.nome 
+ORDER BY QTD_TURMAS DESC, d.nome)
+WHERE ROWNUM <= 5;
+
+SELECT * FROM (WITH PROFESSORES_MULT_DISC AS (SELECT DISTINCT id_professor, id_disciplina FROM fat_obj_tab_alocacao aloc WHERE aloc.id_disciplina != ANY(SELECT id_disciplina FROM fat_obj_tab_alocacao aloc_int WHERE aloc.id_professor = aloc_int.id_professor) order by id_professor)
+SELECT p.nome, COUNT(1) AS DISC_PROF
+FROM PROFESSORES_MULT_DISC, dim_obj_tab_professor p
+WHERE ref(p) = PROFESSORES_MULT_DISC.id_professor
+GROUP BY p.nome
+ORDER BY DISC_PROF DESC, p.nome)
+WHERE ROWNUM <= 5;
