@@ -1,1 +1,533 @@
+* * * CONSULTAS TABELAS RELACIONAIS * * *
 
+Consulta 1 ......................................................................
+
+SELECT nome, count(id_professor) AS QTD_PROF FROM (
+SELECT DISTINCT d.id_disciplina, d.nome, aloc.id_professor FROM fat_alocacao aloc, dim_disciplina d WHERE aloc.id_disciplina = d.id_disciplina
+) GROUP BY id_disciplina, nome ORDER BY QTD_PROF DESC, nome;
+
+NOME                                                           QTD_PROF
+------------------------------------------------------------ ----------
+LABORATÓRIO DE PROGRAMAÇÃO I                                          4
+LABORATÓRIO DE PROGRAMAÇÃO II                                         4
+ANÁLISE E TÉCNICA DE ALGORITMOS                                       3
+CALCULO NUMERICO                                                      3
+INTRODUÇÃO A COMPUTACAO                                               3
+PROGRAMAÇÃO I                                                         3
+ADMINISTRAÇÃO DE SISTEMAS DE INFORMAÇÃO                               2
+ANÁLISE DE SISTEMAS                                                   2
+BANCO DE DADOS I                                                      2
+ESTRUTURA DE DADOS                                                    2
+ESTÁGIO DOCÊNCIA I                                                    2
+
+NOME                                                           QTD_PROF
+------------------------------------------------------------ ----------
+ESTÁGIO DOCÊNCIA II                                                   2
+FUNDAMENTOS DE MATEMÁTICA PARA CIÊNCIA DA COMPUTAÇÃO I                2
+FUNDAMENTOS DE MATEMÁTICA PARA CIÊNCIA DA COMPUTAÇÃO II               2
+FUNDAMENTOS DE PESQUISA EM CIÊNCIA DA COMPUTAÇÃO I                    2
+LABORATÓRIO DE ESTRUTURA DE DADOS                                     2
+PARADIGMAS DE LINGUAGEM DE PROGRAMAÇÃO                                2
+PROGRAMAÇÃO II                                                        2
+PROJETO DE PESQUISA                                                   2
+PROJETO DE SOFTWARE                                                   2
+PROJETO I                                                             2
+SISTEMAS OPERACIONAIS                                                 2
+
+NOME                                                           QTD_PROF
+------------------------------------------------------------ ----------
+TRABALHO DE TESE                                                      2
+ADMINISTRAÇÃO DE SISTEMAS                                             1
+ALGORITMOS AVANÇADOS II                                               1
+APLICAÇÕES DE TEORIA DOS GRAFOS                                       1
+APRENDIZAGEM DE MÁQUINA                                               1
+AVAL.DE DESEMPENHO DE SISTEMAS DISCRETOS                              1
+BANCO DE DADOS                                                        1
+BANCO DE DADOS II                                                     1
+CIÊNCIA DE DADOS PREDITIVA                                            1
+COMPILADORES                                                          1
+ECONOMIA DE TECNOLOGIA DA INFORMACAO                                  1
+
+NOME                                                           QTD_PROF
+------------------------------------------------------------ ----------
+EMPREENDEDORISMO                                                      1
+EMPREENDEDORISMO EM SOFTWARE                                          1
+ENGENHARIA DE SOFTWARE                                                1
+ENGENHARIA DE SOFTWARE                                                1
+ESTÁGIO INTEGRADO I                                                   1
+FUNDAMENTOS DE PESQUISA EM CIÊNCIA DA COMPUTAÇÃO II                   1
+FUNDAMENTOS DE PESQUISA EM CIÊNCIA DA COMPUTAÇÃO III                  1
+GERÊNCIA DE REDES DE COMPUTADORES                                     1
+GESTÃO DE SISTEMAS                                                    1
+INFORMÁTICA E SOCIEDADE                                               1
+INTELIGENCIA ARTIFICIAL                                               1
+
+NOME                                                           QTD_PROF
+------------------------------------------------------------ ----------
+INTELIGÊNCIA ARTIFICIAL                                               1
+INTERCONEXÃO DE REDES DE COMPUTADORES                                 1
+JOGOS DIGITAIS                                                        1
+LABORATÓRIO DE ORGANIZAÇÃO E ARQUITETURA DE COMPUTADORES              1
+LÓGICA MATEMÁTICA                                                     1
+MÉTODOS E SOFTWARE NUMÉRICOS                                          1
+ORGANIZAÇÃO E ARQUITETURA DE COMPUTADORES                             1
+PRINCÍPIOS DE DESENVOLVIMENTO WEB                                     1
+PROGRAMAÇÃO CONCORRENTE                                               1
+PROGRAMAÇÃO FUNCIONAL                                                 1
+PROJETO DE REDES DE COMPUTADORES                                      1
+
+NOME                                                           QTD_PROF
+------------------------------------------------------------ ----------
+PROJETO DE SISTEMAS OPERACIONAIS                                      1
+PROJETO DE TRABALHO DE CONCLUSÃO DE CURSO                             1
+PROJETO II                                                            1
+PRÁTICA DE ENSINO DE COMPUTAÇÃO I                                     1
+PRÁTICA DE ENSINO DE COMPUTAÇÃO II                                    1
+REDES DE COMPUTADORES                                                 1
+REDES NEURAIS                                                         1
+SEMINÁRIOS                                                            1
+SISTEMA DE APOIO A DECISÃO                                            1
+TEORIA DA COMPUTAÇÃO                                                  1
+TEORIA DOS GRAFOS                                                     1
+
+NOME                                                           QTD_PROF
+------------------------------------------------------------ ----------
+TRABALHO DE DISSERTACÃO                                               1
+VERIFICAÇÃO E VALIDAÇÃO DE SOFTWARE                                   1
+VISUALIZAÇÃO DE DADOS                                                 1
+VISUALIZAÇÃO DE DADOS                                                 1
+
+70 rows selected.
+
+Elapsed: 00:00:00.25
+
+Consulta 2 ......................................................................
+
+SELECT nome FROM dim_professor p1 
+WHERE p1.nome != ALL(SELECT DISTINCT p2.nome FROM fat_alocacao aloc, dim_professor p2 WHERE aloc.id_curso = 2 AND aloc.id_professor = p2.id_professor) 
+ORDER BY p1.nome;
+
+NOME
+---------------
+ANTAO
+BRUNO
+DALTON
+EANES
+ELIANE
+ELMAR
+EUSTAQUIO
+EVERTON
+FRANKLIN
+HERMAN
+HYGGO
+
+NOME
+---------------
+JOAO ARTHUR
+JORGE
+KYLLER
+LIVIA
+MARCELO
+MATHEUS
+MELINA
+PATRICIA
+PEDRO
+RAQUEL
+ROBERT
+
+NOME
+---------------
+ROBERTO
+TIAGO
+WILKERSON
+
+25 rows selected.
+
+Elapsed: 00:00:00.00
+
+Consulta 3 ......................................................................
+
+SELECT * FROM 
+ (SELECT p.nome, AVG(carga) as MEDIA_CH 
+  FROM dim_disciplina d, fat_alocacao a, dim_professor p 
+  WHERE a.id_disciplina = d.id_disciplina AND p.id_professor = a.id_professor 
+  GROUP BY p.nome 
+  ORDER BY MEDIA_CH DESC) 
+WHERE ROWNUM <= 5;
+
+NOME              MEDIA_CH
+--------------- ----------
+CLAUDIO C              120
+ROBERT                  60
+ELIANE                  60
+DALTON                  60
+JOAO ARTHUR             60
+
+Elapsed: 00:00:00.48
+
+Consulta 4 ......................................................................
+
+SELECT nome
+FROM dim_professor p, (SELECT id_professor 
+FROM fat_alocacao aloc 
+WHERE aloc.id_curso = 1
+INTERSECT
+SELECT id_professor
+FROM fat_alocacao aloc
+WHERE aloc.id_curso = 2) d
+WHERE p.id_professor = d.id_professor
+ORDER BY nome;
+
+NOME
+---------------
+ADALBERTO
+ANDREY
+CARLOS E
+CLAUDIO B
+CLAUDIO C
+FUBICA
+GUSTAVO
+JOSEANA
+LEANDRO
+MARCUS
+NAZARENO
+
+NOME
+---------------
+REINALDO
+ROHIT
+THIAGO
+
+14 rows selected.
+
+Elapsed: 00:00:00.11
+
+Consulta 5 ......................................................................
+
+SELECT * FROM (SELECT s.codigo, COUNT(1) as COUNT_SALA 
+FROM dim_sala s, fat_alocacao aloc 
+WHERE aloc.id_sala = s.id_sala 
+GROUP BY s.codigo 
+ORDER BY COUNT_SALA DESC)
+WHERE ROWNUM <= 5;
+
+CODIGO   COUNT_SALA
+-------- ----------
+CD105            77
+RE-06            68
+LCC1             64
+CD107            58
+LCC3A            56
+
+Elapsed: 00:00:00.42
+
+Consulta 6 ......................................................................
+
+SELECT * FROM (SELECT d.nome, COUNT(1) as QTD_TURMAS 
+FROM dim_disciplina d, fat_alocacao aloc 
+WHERE aloc.id_disciplina = d.id_disciplina
+GROUP BY d.nome 
+ORDER BY QTD_TURMAS DESC, d.nome)
+WHERE ROWNUM <= 5;
+
+NOME                                                         QTD_TURMAS
+------------------------------------------------------------ ----------
+CALCULO NUMERICO                                                     32
+LABORATÓRIO DE PROGRAMAÇÃO I                                         28
+PROGRAMAÇÃO I                                                        27
+LABORATÓRIO DE ORGANIZAÇÃO E ARQUITETURA DE COMPUTADORES             24
+LABORATÓRIO DE PROGRAMAÇÃO II                                        24
+
+Elapsed: 00:00:00.33
+
+Consulta 7 ......................................................................
+
+SELECT * FROM (WITH PROFESSORES_MULT_DISC AS (SELECT DISTINCT id_professor, id_disciplina FROM fat_alocacao aloc WHERE aloc.id_disciplina != ANY(SELECT id_disciplina FROM fat_alocacao aloc_int WHERE aloc.id_professor = aloc_int.id_professor) order by id_professor)
+SELECT p.nome, COUNT(1) AS DISC_PROF
+FROM PROFESSORES_MULT_DISC, dim_professor p
+WHERE p.id_professor = PROFESSORES_MULT_DISC.id_professor
+GROUP BY p.nome
+ORDER BY DISC_PROF DESC, p.nome)
+WHERE ROWNUM <= 5;
+
+NOME             DISC_PROF
+--------------- ----------
+THIAGO                   5
+ADALBERTO                4
+ANDREY                   4
+CARLOS E                 4
+CLAUDIO C                4
+
+Elapsed: 00:00:00.17
+
+* * * CONSULTAS TABELAS OBJETO RELACIONAS * * *
+
+Consulta 1 ......................................................................
+
+SELECT nome, count(id_professor) AS QTD_PROF FROM (
+    SELECT DISTINCT d.id_disciplina, d.nome, aloc.id_professor 
+    FROM fat_obj_tab_alocacao aloc JOIN dim_obj_tab_disciplina d 
+    ON aloc.id_disciplina = REF(d)
+) GROUP BY id_disciplina, nome ORDER BY QTD_PROF DESC, nome;
+
+NOME                                                           QTD_PROF
+------------------------------------------------------------ ----------
+LABORATÓRIO DE PROGRAMAÇÃO I                                          4
+LABORATÓRIO DE PROGRAMAÇÃO II                                         4
+ANÁLISE E TÉCNICA DE ALGORITMOS                                       3
+CALCULO NUMERICO                                                      3
+INTRODUÇÃO A COMPUTACAO                                               3
+PROGRAMAÇÃO I                                                         3
+ADMINISTRAÇÃO DE SISTEMAS DE INFORMAÇÃO                               2
+ANÁLISE DE SISTEMAS                                                   2
+BANCO DE DADOS I                                                      2
+ESTRUTURA DE DADOS                                                    2
+ESTÁGIO DOCÊNCIA I                                                    2
+
+NOME                                                           QTD_PROF
+------------------------------------------------------------ ----------
+ESTÁGIO DOCÊNCIA II                                                   2
+FUNDAMENTOS DE MATEMÁTICA PARA CIÊNCIA DA COMPUTAÇÃO I                2
+FUNDAMENTOS DE MATEMÁTICA PARA CIÊNCIA DA COMPUTAÇÃO II               2
+FUNDAMENTOS DE PESQUISA EM CIÊNCIA DA COMPUTAÇÃO I                    2
+LABORATÓRIO DE ESTRUTURA DE DADOS                                     2
+PARADIGMAS DE LINGUAGEM DE PROGRAMAÇÃO                                2
+PROGRAMAÇÃO II                                                        2
+PROJETO DE PESQUISA                                                   2
+PROJETO DE SOFTWARE                                                   2
+PROJETO I                                                             2
+SISTEMAS OPERACIONAIS                                                 2
+
+NOME                                                           QTD_PROF
+------------------------------------------------------------ ----------
+TRABALHO DE TESE                                                      2
+ADMINISTRAÇÃO DE SISTEMAS                                             1
+ALGORITMOS AVANÇADOS II                                               1
+APLICAÇÕES DE TEORIA DOS GRAFOS                                       1
+APRENDIZAGEM DE MÁQUINA                                               1
+AVAL.DE DESEMPENHO DE SISTEMAS DISCRETOS                              1
+BANCO DE DADOS                                                        1
+BANCO DE DADOS II                                                     1
+CIÊNCIA DE DADOS PREDITIVA                                            1
+COMPILADORES                                                          1
+ECONOMIA DE TECNOLOGIA DA INFORMACAO                                  1
+
+NOME                                                           QTD_PROF
+------------------------------------------------------------ ----------
+EMPREENDEDORISMO                                                      1
+EMPREENDEDORISMO EM SOFTWARE                                          1
+ENGENHARIA DE SOFTWARE                                                1
+ENGENHARIA DE SOFTWARE                                                1
+ESTÁGIO INTEGRADO I                                                   1
+FUNDAMENTOS DE PESQUISA EM CIÊNCIA DA COMPUTAÇÃO II                   1
+FUNDAMENTOS DE PESQUISA EM CIÊNCIA DA COMPUTAÇÃO III                  1
+GERÊNCIA DE REDES DE COMPUTADORES                                     1
+GESTÃO DE SISTEMAS                                                    1
+INFORMÁTICA E SOCIEDADE                                               1
+INTELIGENCIA ARTIFICIAL                                               1
+
+NOME                                                           QTD_PROF
+------------------------------------------------------------ ----------
+INTELIGÊNCIA ARTIFICIAL                                               1
+INTERCONEXÃO DE REDES DE COMPUTADORES                                 1
+JOGOS DIGITAIS                                                        1
+LABORATÓRIO DE ORGANIZAÇÃO E ARQUITETURA DE COMPUTADORES              1
+LÓGICA MATEMÁTICA                                                     1
+MÉTODOS E SOFTWARE NUMÉRICOS                                          1
+ORGANIZAÇÃO E ARQUITETURA DE COMPUTADORES                             1
+PRINCÍPIOS DE DESENVOLVIMENTO WEB                                     1
+PROGRAMAÇÃO CONCORRENTE                                               1
+PROGRAMAÇÃO FUNCIONAL                                                 1
+PROJETO DE REDES DE COMPUTADORES                                      1
+
+NOME                                                           QTD_PROF
+------------------------------------------------------------ ----------
+PROJETO DE SISTEMAS OPERACIONAIS                                      1
+PROJETO DE TRABALHO DE CONCLUSÃO DE CURSO                             1
+PROJETO II                                                            1
+PRÁTICA DE ENSINO DE COMPUTAÇÃO I                                     1
+PRÁTICA DE ENSINO DE COMPUTAÇÃO II                                    1
+REDES DE COMPUTADORES                                                 1
+REDES NEURAIS                                                         1
+SEMINÁRIOS                                                            1
+SISTEMA DE APOIO A DECISÃO                                            1
+TEORIA DA COMPUTAÇÃO                                                  1
+TEORIA DOS GRAFOS                                                     1
+
+NOME                                                           QTD_PROF
+------------------------------------------------------------ ----------
+TRABALHO DE DISSERTACÃO                                               1
+VERIFICAÇÃO E VALIDAÇÃO DE SOFTWARE                                   1
+VISUALIZAÇÃO DE DADOS                                                 1
+VISUALIZAÇÃO DE DADOS                                                 1
+
+70 rows selected.
+
+Elapsed: 00:00:00.10
+
+
+Consulta 2 ......................................................................
+
+SELECT nome FROM dim_obj_tab_professor p1 
+WHERE p1.nome != ALL(
+    SELECT DISTINCT p2.nome 
+    FROM fat_obj_tab_alocacao aloc, dim_obj_tab_professor p2 
+    WHERE aloc.id_curso.id_curso = 2 
+    AND aloc.id_professor = ref(p2)
+    ) 
+ORDER BY p1.nome;
+
+NOME
+---------------
+ANTAO
+BRUNO
+DALTON
+EANES
+ELIANE
+ELMAR
+EUSTAQUIO
+EVERTON
+FRANKLIN
+HERMAN
+HYGGO
+
+NOME
+---------------
+JOAO ARTHUR
+JORGE
+KYLLER
+LIVIA
+MARCELO
+MATHEUS
+MELINA
+PATRICIA
+PEDRO
+RAQUEL
+ROBERT
+
+NOME
+---------------
+ROBERTO
+TIAGO
+WILKERSON
+
+25 rows selected.
+
+Elapsed: 00:00:03.90
+
+Consulta 3 ......................................................................
+
+SELECT * FROM 
+ (SELECT p.nome, AVG(carga) as MEDIA_CH 
+  FROM dim_obj_tab_disciplina d, fat_obj_tab_alocacao a, dim_obj_tab_professor p 
+  WHERE a.id_disciplina = ref(d) AND ref(p) = a.id_professor 
+  GROUP BY p.nome 
+  ORDER BY MEDIA_CH DESC) 
+WHERE ROWNUM <= 5;
+
+NOME              MEDIA_CH
+--------------- ----------
+CLAUDIO C              120
+ROBERT                  60
+ELIANE                  60
+DALTON                  60
+JOAO ARTHUR             60
+
+Elapsed: 00:00:00.45
+
+
+Consulta 4 ......................................................................
+
+SELECT nome
+FROM dim_obj_tab_professor p, (SELECT id_professor 
+FROM fat_obj_tab_alocacao aloc 
+WHERE aloc.id_curso.id_curso = 1
+INTERSECT
+SELECT id_professor
+FROM fat_obj_tab_alocacao aloc
+WHERE aloc.id_curso.id_curso = 2) d
+WHERE ref(p) = d.id_professor
+ORDER BY nome;
+
+NOME
+---------------
+ADALBERTO
+ANDREY
+CARLOS E
+CLAUDIO B
+CLAUDIO C
+FUBICA
+GUSTAVO
+JOSEANA
+LEANDRO
+MARCUS
+NAZARENO
+
+NOME
+---------------
+REINALDO
+ROHIT
+THIAGO
+
+14 rows selected.
+
+Elapsed: 00:00:00.17
+
+
+Consulta 5 ......................................................................
+
+SELECT * FROM (SELECT s.codigo, COUNT(1) as COUNT_SALA 
+FROM dim_obj_tab_sala s, fat_obj_tab_alocacao aloc 
+WHERE aloc.id_sala = ref(s)
+GROUP BY s.codigo 
+ORDER BY COUNT_SALA DESC)
+WHERE ROWNUM <= 5;
+
+CODIGO   COUNT_SALA
+-------- ----------
+CD105            77
+RE-06            68
+LCC1             64
+CD107            58
+LCC3A            56
+
+Elapsed: 00:00:00.33
+
+Consulta 6 ......................................................................
+
+SELECT * FROM (SELECT d.nome, COUNT(1) as QTD_TURMAS 
+FROM dim_obj_tab_disciplina d, fat_obj_tab_alocacao aloc 
+WHERE aloc.id_disciplina = ref(d)
+GROUP BY d.nome 
+ORDER BY QTD_TURMAS DESC, d.nome)
+WHERE ROWNUM <= 5;
+
+NOME                                                         QTD_TURMAS
+------------------------------------------------------------ ----------
+CALCULO NUMERICO                                                     32
+LABORATÓRIO DE PROGRAMAÇÃO I                                         28
+PROGRAMAÇÃO I                                                        27
+LABORATÓRIO DE ORGANIZAÇÃO E ARQUITETURA DE COMPUTADORES             24
+LABORATÓRIO DE PROGRAMAÇÃO II                                        24
+
+Elapsed: 00:00:00.37
+
+Consulta 7 ......................................................................
+
+SELECT * FROM (WITH PROFESSORES_MULT_DISC AS (SELECT DISTINCT id_professor, id_disciplina FROM fat_obj_tab_alocacao aloc WHERE aloc.id_disciplina != ANY(SELECT id_disciplina FROM fat_obj_tab_alocacao aloc_int WHERE aloc.id_professor = aloc_int.id_professor) order by id_professor)
+SELECT p.nome, COUNT(1) AS DISC_PROF
+FROM PROFESSORES_MULT_DISC, dim_obj_tab_professor p
+WHERE ref(p) = PROFESSORES_MULT_DISC.id_professor
+GROUP BY p.nome
+ORDER BY DISC_PROF DESC, p.nome)
+WHERE ROWNUM <= 5;
+
+NOME             DISC_PROF
+--------------- ----------
+THIAGO                   5
+ADALBERTO                4
+ANDREY                   4
+CARLOS E                 4
+CLAUDIO C                4
+
+Elapsed: 00:00:00.30
