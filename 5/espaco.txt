@@ -27,3 +27,23 @@ FROM user_extents
 WHERE segment_name = 'FAT_ALOCACAO';
 
 FAT_ALOCACAO	| 0.0625
+
+SELECT segment_name, bytes/1024/1024 AS espaco
+FROM user_extents
+WHERE segment_name = 'DIM_OBJ_TAB_DISCIPLINA';
+
+SELECT segment_name, bytes/1024/1024 AS espaco
+FROM user_extents
+WHERE segment_name = 'DIM_OBJ_TAB_PROFESSOR';
+
+SELECT segment_name, bytes/1024/1024 AS espaco
+FROM user_extents
+WHERE segment_name = 'DIM_OBJ_TAB_CURSO';
+
+SELECT segment_name, bytes/1024/1024 AS espaco
+FROM user_extents
+WHERE segment_name = 'DIM_OBJ_TAB_SALA';
+
+SELECT segment_name, bytes/1024/1024 AS espaco
+FROM user_extents
+WHERE segment_name = 'FAT_OBJ_TAB_ALOCACAO';
