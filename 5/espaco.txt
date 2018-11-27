@@ -32,18 +32,28 @@ SELECT segment_name, bytes/1024/1024 AS espaco
 FROM user_extents
 WHERE segment_name = 'DIM_OBJ_TAB_DISCIPLINA';
 
+DIM_OBJ_TAB_DISCIPLINA |	0.0625
+
 SELECT segment_name, bytes/1024/1024 AS espaco
 FROM user_extents
 WHERE segment_name = 'DIM_OBJ_TAB_PROFESSOR';
+
+DIM_OBJ_TAB_PROFESSOR	| 0.0625
 
 SELECT segment_name, bytes/1024/1024 AS espaco
 FROM user_extents
 WHERE segment_name = 'DIM_OBJ_TAB_CURSO';
 
+DIM_OBJ_TAB_CURSO	| 0.0625
+
 SELECT segment_name, bytes/1024/1024 AS espaco
 FROM user_extents
 WHERE segment_name = 'DIM_OBJ_TAB_SALA';
 
+DIM_OBJ_TAB_SALA	| 0.0625
+
 SELECT segment_name, bytes/1024/1024 AS espaco
 FROM user_extents
 WHERE segment_name = 'FAT_OBJ_TAB_ALOCACAO';
+
+FAT_OBJ_TAB_ALOCACAO	| 0.0625
