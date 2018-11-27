@@ -1,6 +1,6 @@
 * * * CONSULTAS TABELAS RELACIONAIS * * *
 
-Consulta 1 ......................................................................
+Consulta A ......................................................................
 
 SELECT nome, count(id_professor) AS QTD_PROF FROM (
 SELECT DISTINCT d.id_disciplina, d.nome, aloc.id_professor FROM fat_alocacao aloc, dim_disciplina d WHERE aloc.id_disciplina = d.id_disciplina
@@ -101,7 +101,7 @@ VISUALIZAÇÃO DE DADOS                                                 1
 
 Elapsed: 00:00:00.25
 
-Consulta 2 ......................................................................
+Consulta B ......................................................................
 
 SELECT nome FROM dim_professor p1 
 WHERE p1.nome != ALL(SELECT DISTINCT p2.nome FROM fat_alocacao aloc, dim_professor p2 WHERE aloc.id_curso = 2 AND aloc.id_professor = p2.id_professor) 
@@ -145,7 +145,7 @@ WILKERSON
 
 Elapsed: 00:00:00.00
 
-Consulta 3 ......................................................................
+Consulta C ......................................................................
 
 SELECT * FROM 
  (SELECT p.nome, AVG(carga) as MEDIA_CH 
@@ -165,7 +165,7 @@ JOAO ARTHUR             60
 
 Elapsed: 00:00:00.48
 
-Consulta 4 ......................................................................
+Consulta D ......................................................................
 
 SELECT nome
 FROM dim_professor p, (SELECT id_professor 
@@ -202,7 +202,7 @@ THIAGO
 
 Elapsed: 00:00:00.11
 
-Consulta 5 ......................................................................
+Consulta E ......................................................................
 
 SELECT * FROM (SELECT s.codigo, COUNT(1) as COUNT_SALA 
 FROM dim_sala s, fat_alocacao aloc 
@@ -221,7 +221,7 @@ LCC3A            56
 
 Elapsed: 00:00:00.42
 
-Consulta 6 ......................................................................
+Consulta F ......................................................................
 
 SELECT * FROM (SELECT d.nome, COUNT(1) as QTD_TURMAS 
 FROM dim_disciplina d, fat_alocacao aloc 
@@ -240,7 +240,7 @@ LABORATÓRIO DE PROGRAMAÇÃO II                                        24
 
 Elapsed: 00:00:00.33
 
-Consulta 7 ......................................................................
+Consulta G ......................................................................
 
 SELECT * FROM (WITH PROFESSORES_MULT_DISC AS (SELECT DISTINCT id_professor, id_disciplina FROM fat_alocacao aloc WHERE aloc.id_disciplina != ANY(SELECT id_disciplina FROM fat_alocacao aloc_int WHERE aloc.id_professor = aloc_int.id_professor) order by id_professor)
 SELECT p.nome, COUNT(1) AS DISC_PROF
@@ -262,7 +262,7 @@ Elapsed: 00:00:00.17
 
 * * * CONSULTAS TABELAS OBJETO RELACIONAS * * *
 
-Consulta 1 ......................................................................
+Consulta A ......................................................................
 
 SELECT nome, count(id_professor) AS QTD_PROF FROM (
     SELECT DISTINCT d.id_disciplina, d.nome, aloc.id_professor 
@@ -366,7 +366,7 @@ VISUALIZAÇÃO DE DADOS                                                 1
 Elapsed: 00:00:00.10
 
 
-Consulta 2 ......................................................................
+Consulta B ......................................................................
 
 SELECT nome FROM dim_obj_tab_professor p1 
 WHERE p1.nome != ALL(
@@ -415,7 +415,7 @@ WILKERSON
 
 Elapsed: 00:00:03.90
 
-Consulta 3 ......................................................................
+Consulta C ......................................................................
 
 SELECT * FROM 
  (SELECT p.nome, AVG(carga) as MEDIA_CH 
@@ -436,7 +436,7 @@ JOAO ARTHUR             60
 Elapsed: 00:00:00.45
 
 
-Consulta 4 ......................................................................
+Consulta D ......................................................................
 
 SELECT nome
 FROM dim_obj_tab_professor p, (SELECT id_professor 
@@ -474,7 +474,7 @@ THIAGO
 Elapsed: 00:00:00.17
 
 
-Consulta 5 ......................................................................
+Consulta E ......................................................................
 
 SELECT * FROM (SELECT s.codigo, COUNT(1) as COUNT_SALA 
 FROM dim_obj_tab_sala s, fat_obj_tab_alocacao aloc 
@@ -493,7 +493,7 @@ LCC3A            56
 
 Elapsed: 00:00:00.33
 
-Consulta 6 ......................................................................
+Consulta F ......................................................................
 
 SELECT * FROM (SELECT d.nome, COUNT(1) as QTD_TURMAS 
 FROM dim_obj_tab_disciplina d, fat_obj_tab_alocacao aloc 
@@ -512,7 +512,7 @@ LABORATÓRIO DE PROGRAMAÇÃO II                                        24
 
 Elapsed: 00:00:00.37
 
-Consulta 7 ......................................................................
+Consulta G ......................................................................
 
 SELECT * FROM (WITH PROFESSORES_MULT_DISC AS (SELECT DISTINCT id_professor, id_disciplina FROM fat_obj_tab_alocacao aloc WHERE aloc.id_disciplina != ANY(SELECT id_disciplina FROM fat_obj_tab_alocacao aloc_int WHERE aloc.id_professor = aloc_int.id_professor) order by id_professor)
 SELECT p.nome, COUNT(1) AS DISC_PROF
